@@ -2,7 +2,7 @@
 ChatGLM golang restapi sdk
 
 # client init
-proxy = client.NewChatGMLClient("XXX.XXX", 30*time.Second)
+proxy = client.NewChatGLMClient("XXX.XXX", 30*time.Second)
 
 # Sync Method Invoke
 prompt := []client.Message{
