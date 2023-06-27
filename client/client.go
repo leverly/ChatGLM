@@ -32,6 +32,7 @@ func (c *ChatGLMClient) Invoke(model string, temperature float32, prompt []Messa
 	request := InvokeRequest{
 		Model:       model,
 		Temperature: temperature,
+		Top_p:       0.7,
 		Prompt:      prompt,
 	}
 	requestJSON, err := json.Marshal(request)
@@ -78,6 +79,7 @@ func (c *ChatGLMClient) AsyncInvoke(model string, temperature float32, prompt []
 	request := InvokeRequest{
 		Model:       model,
 		Temperature: temperature,
+		Top_p:       0.7,
 		Prompt:      prompt,
 	}
 	requestJSON, err := json.Marshal(request)
