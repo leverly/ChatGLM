@@ -1,7 +1,6 @@
 package client
 
 import (
-	"encoding/base64"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"strings"
@@ -22,15 +21,10 @@ func GenerateToken(apikey string, expSeconds int) (string, error) {
 		"exp":       now + int64(expSeconds)*1000,
 	}
 
-	decodedSecret, err := base64.StdEncoding.DecodeString(secret)
-	if err != nil {
-		return "", err
-	}
-
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
 	token.Header["alg"] = "HS256"
 	token.Header["sign_type"] = "SIGN"
-	signedToken, err := token.SignedString(decodedSecret)
+	signedToken, err := token.SignedString([]byte(secret))
 	if err != nil {
 		return "", err
 	}
