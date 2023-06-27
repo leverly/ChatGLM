@@ -6,11 +6,10 @@ import (
 	"time"
 )
 
-var proxy *client.ChatGLMClient
+const API_KEY = "XXX.XXX"
 
 func main() {
-	proxy = client.NewChatGLMClient("XXX.XXX", 30*time.Second)
-
+	model := "chatglm_6b"
 	prompt := []client.Message{
 		{Role: "user", Content: "你好"},
 		{Role: "assistant", Content: "我是人工智能助手"},
@@ -18,7 +17,13 @@ func main() {
 		{Role: "assistant", Content: "我叫chatGLM"},
 		{Role: "user", Content: "你都可以做些什么事"},
 	}
-	model := "chatglm_6b"
+
+	Invoke(model, prompt)
+	AsyncInvoke(model, prompt)
+}
+
+func Invoke(model string, prompt []client.Message) {
+	proxy := client.NewChatGLMClient(API_KEY, 30*time.Second)
 	response, err := proxy.Invoke(model, 0.2, prompt)
 	if err != nil {
 		fmt.Println("Invoke Error:", err)
@@ -28,11 +33,14 @@ func main() {
 }
 
 func AsyncInvoke(model string, prompt []client.Message) {
+	proxy := client.NewChatGLMClient(API_KEY, 30*time.Second)
 	taskId, err := proxy.AsyncInvoke(model, 0.2, prompt)
 	if err != nil {
 		fmt.Println("Async Invoke Error:", err)
 		return
 	}
+	fmt.Println("Async Invoke Task:", taskId)
+
 	for true {
 		response, err := proxy.AsyncInvokeTask(model, taskId)
 		if err != nil {

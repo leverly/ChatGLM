@@ -18,7 +18,7 @@ type ChatGLMClient struct {
 func NewChatGLMClient(apiKey string, timeout time.Duration) *ChatGLMClient {
 	return &ChatGLMClient{
 		apiKey:    apiKey,
-		urlPrefix: "https://open.bigmodel.cn/api/paas/v3/model-api/",
+		urlPrefix: "https://open.bigmodel.cn/api/paas/v3/model-api",
 		client:    &http.Client{Timeout: timeout},
 	}
 }
@@ -29,7 +29,6 @@ func (c *ChatGLMClient) Invoke(model string, temperature float32, prompt []Messa
 	if err != nil {
 		return nil, err
 	}
-
 	request := InvokeRequest{
 		Model:       model,
 		Temperature: temperature,
@@ -57,6 +56,7 @@ func (c *ChatGLMClient) Invoke(model string, temperature float32, prompt []Messa
 	if err != nil {
 		return nil, err
 	}
+	defer c.client.CloseIdleConnections()
 
 	var response InvokeResponse
 	err = json.Unmarshal(body, &response)
