@@ -1,5 +1,11 @@
 package client
 
+const (
+	MessageRoleSystem    = "system"
+	MessageRoleUser      = "user"
+	MessageRoleAssistant = "assistant"
+)
+
 type Message struct {
 	Role    string `json:"role"`
 	Content string `json:"content"`
@@ -19,12 +25,18 @@ type InvokeResponse struct {
 	Data    *ResponseData `json:"data,omitempty"`
 }
 
+const (
+	TaskStatusSuccess    = "SUCCESS"
+	TaskStatusFail       = "FAIL"
+	TaskStatusProcessing = "PROCESSING"
+)
+
 type ResponseData struct {
-	TaskID     string       `json:"task_id"`
-	RequestID  string       `json:"request_id"`
-	TaskStatus string       `json:"task_status"`
-	Choices    []Message    `json:"choices"`
-	Usage      RequestUsage `json:"usage"`
+	TaskID     string        `json:"task_id"`
+	RequestID  string        `json:"request_id"`
+	TaskStatus string        `json:"task_status"`
+	Choices    *[]Message    `json:"choices,omitempty"`
+	Usage      *RequestUsage `json:"usage,omitempty"`
 }
 
 type RequestUsage struct {
