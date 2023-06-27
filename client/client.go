@@ -9,14 +9,14 @@ import (
 	"time"
 )
 
-type ChatGMLClient struct {
+type ChatGLMClient struct {
 	urlPrefix string
 	apiKey    string
 	client    *http.Client
 }
 
-func NewChatGMLClient(apiKey string, timeout time.Duration) *ChatGMLClient {
-	return &ChatGMLClient{
+func NewChatGLMClient(apiKey string, timeout time.Duration) *ChatGLMClient {
+	return &ChatGLMClient{
 		apiKey:    apiKey,
 		urlPrefix: "https://open.bigmodel.cn/api/paas/v3/model-api/",
 		client:    &http.Client{Timeout: timeout},
@@ -24,7 +24,7 @@ func NewChatGMLClient(apiKey string, timeout time.Duration) *ChatGMLClient {
 }
 
 // sync invoke get result
-func (c *ChatGMLClient) Invoke(model string, temperature float32, prompt []Message) (*ResponseData, error) {
+func (c *ChatGLMClient) Invoke(model string, temperature float32, prompt []Message) (*ResponseData, error) {
 	token, err := GenerateToken(c.apiKey, 300)
 	if err != nil {
 		return nil, err
@@ -69,7 +69,7 @@ func (c *ChatGMLClient) Invoke(model string, temperature float32, prompt []Messa
 }
 
 // return taskId for async invoke
-func (c *ChatGMLClient) AsyncInvoke(model string, temperature float32, prompt []Message) (string, error) {
+func (c *ChatGLMClient) AsyncInvoke(model string, temperature float32, prompt []Message) (string, error) {
 	token, err := GenerateToken(c.apiKey, 300)
 	if err != nil {
 		return "", err
@@ -115,7 +115,7 @@ func (c *ChatGMLClient) AsyncInvoke(model string, temperature float32, prompt []
 }
 
 // get async invoke task result
-func (c *ChatGMLClient) AsyncInvokeTask(model, taskId string) (*ResponseData, error) {
+func (c *ChatGLMClient) AsyncInvokeTask(model, taskId string) (*ResponseData, error) {
 	token, err := GenerateToken(c.apiKey, 300)
 	if err != nil {
 		return nil, err

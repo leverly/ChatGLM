@@ -6,10 +6,10 @@ import (
 	"time"
 )
 
-var proxy *client.ChatGMLClient
+var proxy *client.ChatGLMClient
 
 func main() {
-	proxy = client.NewChatGMLClient("XXX.XXX", 30*time.Second)
+	proxy = client.NewChatGLMClient("XXX.XXX", 30*time.Second)
 
 	prompt := []client.Message{
 		{Role: "user", Content: "你好"},
