@@ -34,4 +34,4 @@ func (s *StreamCallback) OnFinish(data *client.SSEInvokeResponse) {
 }
 
 ## stream method invoke
-err := proxy.SSEInvoke(model, 0.2, prompt, &StreamCallback{})
+err := proxy.SSEInvoke("chatglm_6b", 0.2, prompt, &StreamCallback{})
