@@ -17,9 +17,17 @@ func main() {
 		{Role: "assistant", Content: "我叫chatGLM"},
 		{Role: "user", Content: "你都可以做些什么事"},
 	}
+	SSEInvoke(model, prompt)
+}
 
-	Invoke(model, prompt)
-	AsyncInvoke(model, prompt)
+func SSEInvoke(model string, prompt []client.Message) {
+	proxy := client.NewChatGLMClient(API_KEY, 30*time.Second)
+	callback := StreamCallback{}
+	err := proxy.SSEInvoke(model, 0.2, prompt, &callback)
+	if err != nil {
+		fmt.Println("SSEInvoke Error:", err)
+		return
+	}
 }
 
 func Invoke(model string, prompt []client.Message) {
