@@ -6,7 +6,9 @@ proxy = client.NewChatGLMClient("XXX.XXX", 30*time.Second)
 
 # Sync Method Invoke
 prompt := []client.Message{
+
 		{Role: "user", Content: "你好"},
+
 }
 
 response, err := proxy.Invoke("chatglm_6b", 0.2, prompt)
@@ -23,16 +25,22 @@ response, err := proxy.AsyncInvokeTask("chatglm_6b", taskId)
 
 ## callback definition
 type StreamCallback struct {
+
 }
 
 func (s *StreamCallback) OnData(data *client.SSEInvokeResponse) {
+
 	fmt.Print(data.Data)
+ 
 }
 
 func (s *StreamCallback) OnFinish(data *client.SSEInvokeResponse) {
+
 	fmt.Println(data.Data)
+ 
 }
 
 ## stream method invoke
 callback := StreamCallback{}
+
 err := proxy.SSEInvoke(model, 0.2, prompt, &callback)
