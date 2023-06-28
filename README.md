@@ -23,7 +23,6 @@ response, err := proxy.AsyncInvokeTask("chatglm_6b", taskId)
 
 ## callback definition
 type StreamCallback struct {
-
 }
 
 func (s *StreamCallback) OnData(data *client.SSEInvokeResponse) {
@@ -35,6 +34,4 @@ func (s *StreamCallback) OnFinish(data *client.SSEInvokeResponse) {
 }
 
 ## stream method invoke
-callback := StreamCallback{}
-
-err := proxy.SSEInvoke(model, 0.2, prompt, &callback)
+err := proxy.SSEInvoke(model, 0.2, prompt, &StreamCallback{})
