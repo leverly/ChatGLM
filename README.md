@@ -6,7 +6,7 @@ proxy = client.NewChatGLMClient("XXX.XXX", 30*time.Second)
 
 # Sync Method Invoke
 prompt := []client.Message{
-		{Role: "user", Content: "你好"},
+		{Role: "user", Content: "hello world"},
 }
 
 response, err := proxy.Invoke("chatglm_6b", 0.2, prompt)
