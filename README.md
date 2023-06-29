@@ -1,6 +1,9 @@
 # ChatGLM-golang
 ChatGLM golang restapi sdk
 
+# download the SDK
+go get -u github.com/leverly/ChatGLM/
+
 # client init
 proxy = client.NewChatGLMClient("XXX.XXX", 30*time.Second)
 
