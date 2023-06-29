@@ -188,6 +188,7 @@ func (c *ChatGLMClient) SSEInvoke(model string, temperature float32, prompt []Me
 			if err == io.EOF {
 				return nil
 			}
+			return err
 		}
 		err = process(event, callback)
 		if err != nil {
@@ -220,7 +221,7 @@ func process(event *StreamEvent, callback StreamEventCallback) error {
 	case ErrorEvent:
 		callback.OnError(errors.New("error"))
 	default:
-		callback.OnError(errors.New("unknown event"))
+		return errors.New("not supported event")
 	}
 	return nil
 }

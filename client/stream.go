@@ -7,6 +7,12 @@ const (
 	InterruptEvent = "interrupted"
 )
 
+type SSEFailedResponse struct {
+	Code    int    `json:"code"`
+	Msg     string `json:"msg"`
+	Success bool   `json:"success"`
+}
+
 type SSEInvokeResponse struct {
 	ID   string
 	Data string

@@ -8,6 +8,7 @@ import (
 	"bufio"
 	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"io"
 )
@@ -72,7 +73,16 @@ func (e *EventStreamReader) ReadEvent() (*StreamEvent, error) {
 		if err != nil {
 			return nil, err
 		}
-		return event, nil
+		if event.hasContent() {
+			return event, nil
+		} else {
+			var failed SSEFailedResponse
+			err = json.Unmarshal(eventBody, &failed)
+			if err != nil {
+				return nil, err
+			}
+			return nil, errors.New(failed.Msg)
+		}
 	}
 	if err := e.scanner.Err(); err != nil {
 		if err == context.Canceled {
