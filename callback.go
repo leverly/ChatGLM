@@ -1,8 +1,8 @@
 package main
 
 import (
-	"ChatGLM/client"
 	"fmt"
+	"github.com/leverly/ChatGLM/client"
 )
 
 type StreamCallback struct {

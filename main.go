@@ -1,9 +1,10 @@
 package main
 
 import (
-	"ChatGLM/client"
 	"fmt"
 	"time"
+
+	"github.com/leverly/ChatGLM/client"
 )
 
 const API_KEY = "XXX.XXX"
