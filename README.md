@@ -5,6 +5,10 @@ ChatGLM golang restapi sdk
 go get -u github.com/leverly/ChatGLM
 
 # client init
+import (
+	"github.com/leverly/ChatGLM/client"
+)
+
 proxy = client.NewChatGLMClient("XXX.XXX", 30*time.Second)
 
 # Sync Method Invoke
