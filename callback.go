@@ -13,7 +13,9 @@ func (s *StreamCallback) OnData(data *client.SSEInvokeResponse) {
 }
 
 func (s *StreamCallback) OnFinish(data *client.SSEInvokeResponse) {
-	fmt.Println(data.Data)
+	// print the last \n
+	fmt.Println()
+	fmt.Println(data.Task.TaskStatus, data.Task.Usage.TotalTokens)
 }
 
 func (s *StreamCallback) OnError(err error) {

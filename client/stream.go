@@ -8,10 +8,9 @@ const (
 )
 
 type SSEInvokeResponse struct {
-	ID    string
-	Event string
-	Data  string
-	Task  SSEResponseTaskData
+	ID   string
+	Data string
+	Task *SSEResponseTaskData
 }
 
 type SSEResponseTaskData struct {
