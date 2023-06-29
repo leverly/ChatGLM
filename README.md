@@ -1,4 +1,4 @@
-# glm
+# ChatGLM-golang
 ChatGLM golang restapi sdk
 
 # client init
