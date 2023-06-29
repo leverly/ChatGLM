@@ -1,7 +1,6 @@
 package client
 
 import (
-	"bufio"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -169,7 +168,6 @@ func (c *ChatGLMClient) SSEInvoke(model string, temperature float32, prompt []Me
 	if err != nil {
 		return err
 	}
-
 	url := fmt.Sprintf("%s/%s/sse-invoke", c.urlPrefix, model)
 	req, err := http.NewRequest("POST", url, strings.NewReader(string(requestJSON)))
 	if err != nil {
@@ -182,74 +180,47 @@ func (c *ChatGLMClient) SSEInvoke(model string, temperature float32, prompt []Me
 	if err != nil {
 		return err
 	}
-	reader := bufio.NewReader(resp.Body)
 	defer resp.Body.Close()
-
-	var data, id, eventType string
+	reader := NewEventStreamReader(resp.Body, 10240)
 	for {
-		bs, err := reader.ReadString('\n')
-		if err != nil && err != io.EOF {
-			callback.OnError(err)
-			return err
-		}
-		if err == io.EOF {
-			break
-		}
-		if len(bs) <= 1 {
-			continue
-		}
-		sp := strings.Split(bs, ":")
-		if len(sp) < 2 {
-			err := errors.New("invalid result format")
-			callback.OnError(err)
-			return err
-		}
-		switch sp[0] {
-		case "id":
-			id = strings.TrimRight(sp[1], "\n")
-		case "data":
-			{
-				temp := bs[len("data:"):]
-				data = temp[:len(temp)-1]
-				if eventType == AddEvent {
-					callback.OnData(&SSEInvokeResponse{
-						ID:    id,
-						Event: eventType,
-						Data:  data,
-					})
-				}
-			}
-		case "event":
-			eventType = strings.TrimRight(sp[1], "\n")
-			switch eventType {
-			case AddEvent:
-				// continue parse the data and then callback
-			case FinishEvent:
-				// continue parse the meta data and then callback
-			case InterruptEvent:
-				callback.OnInterrupt()
-			case ErrorEvent:
-				// TODO error callback
-				callback.OnError(errors.New("error"))
-			}
-		case "meta":
-			{
-				usageData := []byte(bs[len("meta:"):])
-				var task SSEResponseTaskData
-				err := json.Unmarshal(usageData, &task)
-				if err != nil {
-					callback.OnError(err)
-					return err
-				}
-				callback.OnFinish(&SSEInvokeResponse{
-					ID:    id,
-					Event: eventType,
-					Data:  data,
-					Task:  task,
-				})
+		event, err := reader.ReadEvent()
+		if err != nil {
+			if err == io.EOF {
 				return nil
 			}
 		}
+		err = process(event, callback)
+		if err != nil {
+			return err
+		}
 	}
 	return errors.New("event stream closed")
+}
+
+func process(event *StreamEvent, callback StreamEventCallback) error {
+	switch string(event.Event) {
+	case AddEvent:
+		callback.OnData(&SSEInvokeResponse{
+			ID:   string(event.ID),
+			Data: string(event.Data),
+		})
+	case FinishEvent:
+		var task SSEResponseTaskData
+		err := json.Unmarshal(event.Meta, &task)
+		if err != nil {
+			return err
+		}
+		callback.OnFinish(&SSEInvokeResponse{
+			ID:   string(event.ID),
+			Data: "",
+			Task: &task,
+		})
+	case InterruptEvent:
+		callback.OnInterrupt()
+	case ErrorEvent:
+		callback.OnError(errors.New("error"))
+	default:
+		callback.OnError(errors.New("unknown event"))
+	}
+	return nil
 }
