@@ -1,4 +1,4 @@
-module glm
+module ChatGLM
 
 go 1.19
 

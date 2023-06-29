@@ -1,8 +1,8 @@
 package main
 
 import (
+	"ChatGLM/client"
 	"fmt"
-	"glm/client"
 )
 
 type StreamCallback struct {
